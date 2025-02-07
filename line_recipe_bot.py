@@ -63,5 +63,20 @@ def handle_message(event):
         TextSendMessage(text=recipe)
     )
 
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    print("📩 メッセージを受信しました:", event.message.text)  # 受信したメッセージをログに出力
+    user_text = event.message.text
+    ingredients = user_text.split(',')  # カンマ区切りで食材をリスト化
+    recipe = generate_recipe(ingredients)
+
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=recipe)
+    )
+    print("✅ レシピを送信しました")  # レシピ送信が成功したかログに出力
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)), debug=True)
